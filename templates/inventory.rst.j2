@@ -1,0 +1,75 @@
+.. _section-inventory:
+
+Inventory
+================================================================================
+
+
+.. _section-inventory-overview:
+
+Overview
+--------------------------------------------------------------------------------
+
+.. list-table:: Server inventory overview
+   :class: server-inventory
+   :header-rows: 1
+
+   * - Host
+     - Type
+     - Distro
+     - Release
+     - Codename
+     - Arch
+     - Kernel
+     - Server
+     - Serial
+     - RAM
+     - Default IPv4
+     - Default IPv6
+{% for iter_inventory_name in hostvars | sort %}
+   * - :ref:`{{ iter_inventory_name }} <section-inventory-detail-{{ iter_inventory_name }}>`
+     - {% if 'servers-production' in hostvars[iter_inventory_name].group_names %}prod{% elif 'servers-development' in hostvars[iter_inventory_name].group_names %}dev{% elif 'servers-demo' in hostvars[iter_inventory_name].group_names %}demo{% else %}none{% endif %}
+
+     - {{ hostvars[iter_inventory_name].ansible_lsb.id }}
+     - {{ hostvars[iter_inventory_name].ansible_lsb.release }}
+     - {{ hostvars[iter_inventory_name].ansible_lsb.codename }}
+     - {{ hostvars[iter_inventory_name].ansible_userspace_architecture }}
+     - {{ hostvars[iter_inventory_name].ansible_kernel }}
+     - {{ hostvars[iter_inventory_name].ansible_product_name }}
+     - {{ hostvars[iter_inventory_name].ansible_product_serial }}
+     - {{ hostvars[iter_inventory_name].ansible_memtotal_mb }}
+     - {{ hostvars[iter_inventory_name].ansible_default_ipv4.address }}
+     - {{ hostvars[iter_inventory_name].ansible_default_ipv6.address }}
+{% endfor %}
+
+
+.. _section-inventory-detail:
+
+Server details
+--------------------------------------------------------------------------------
+
+.. toctree::
+   :maxdepth: 1
+   :glob:
+
+   inventory/detail_*
+
+
+.. _section-inventory-dump:
+
+Server fact dumps
+--------------------------------------------------------------------------------
+
+.. toctree::
+   :maxdepth: 1
+   :glob:
+
+   inventory/dump_*
+
+
+Full environment dump
+--------------------------------------------------------------------------------
+
+.. toctree::
+   :maxdepth: 1
+
+   dump

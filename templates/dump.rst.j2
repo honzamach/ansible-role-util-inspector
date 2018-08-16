@@ -1,0 +1,45 @@
+.. _section-dump:
+
+Full environment dump
+================================================================================
+
+
+VARIABLES ("vars")
+--------------------------------------------------------------------------------
+
+.. code-block:: json
+
+{{ vars | to_nice_json | indent(width=4, first=True, blank=True) }}
+
+
+ENVIRONMENT variable ("environment")
+--------------------------------------------------------------------------------
+
+.. code-block:: json
+
+{{ environment | to_nice_json | indent(width=4, first=True, blank=True) }}
+
+
+GROUP NAMES variable ("group_names")
+--------------------------------------------------------------------------------
+
+.. code-block:: json
+
+{{ group_names | to_nice_json | indent(width=4, first=True, blank=True) }}
+
+
+GROUPS variable ("groups")
+--------------------------------------------------------------------------------
+
+.. code-block:: json
+
+{{ groups | to_nice_json | indent(width=4, first=True, blank=True) }}
+
+
+HOST variables ("hostvars")
+--------------------------------------------------------------------------------
+
+.. code-block:: json
+
+{{ hostvars | to_nice_json | indent(width=4, first=True, blank=True) }}
+

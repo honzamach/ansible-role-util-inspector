@@ -1,0 +1,8 @@
+.. _section-inventory-dump-{{ inventory_hostname }}:
+
+Environment dump for server **{{ ansible_hostname }}**
+================================================================================
+
+.. code-block:: json
+
+{{ vars | to_nice_json | indent(width=4, first=True, blank=True) }}
