@@ -1,35 +1,6 @@
 ---
 
 #
-# Name of the UNIX system user for PostgreSQL database.
+# Name of the directory to which to generate the documentation.
 #
-rs_pgsql__user: postgres
-
-#
-# Name of the UNIX system group for PostgreSQL database.
-#
-rs_pgsql__group: postgres
-
-#
-# Path to log file.
-#
-rs_pgsql__logdir: "/var/log/postgresql"
-
-#
-# Log rotation switch (true/false).
-#
-rs_pgsql__logrotate: true
-
-#
-# Log rotation options.
-#
-rs_pgsql__logrotate_options:
-  - weekly
-  - rotate 8
-  - missingok
-  - notifempty
-  - copytruncate
-  - compress
-  - delaycompress
-  - dateext
-  - su root root
+hm_util_inspector__docs_dir: vault/docs

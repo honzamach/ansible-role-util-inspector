@@ -6,74 +6,66 @@
     state: directory
     mode: 0755
   with_items:
-    - "{{ playbook_dir }}/doc"
-    - "{{ playbook_dir }}/doc/_pages"
-    - "{{ playbook_dir }}/doc/_pages/inventory"
+    - "{{ playbook_dir }}/{{ hm_util_inspector__docs_dir }}"
+    - "{{ playbook_dir }}/{{ hm_util_inspector__docs_dir }}/inventory"
+    - "{{ playbook_dir }}/{{ hm_util_inspector__docs_dir }}/users"
   delegate_to: localhost
   run_once: true
 
 - name: Generating inventory overview documentation page
   template:
     src: "{{ item }}"
-    dest: "{{ playbook_dir }}/doc/_pages/inventory.rst"
+    dest: "{{ playbook_dir }}/{{ hm_util_inspector__docs_dir }}/section_01_inventory.rst"
     mode: 0644
   with_first_found:
     - "host_files/{{ inventory_hostname }}/inventory.rst.j2"
-    - "group_files/servers-production/inventory.rst.j2"
-    - "group_files/servers-development/inventory.rst.j2"
-    - "group_files/servers-demo/inventory.rst.j2"
+    - "group_files/servers-{{ msms_server_type }}/inventory.rst.j2"
     - "group_files/servers/inventory.rst.j2"
     - "{{ role_path }}/templates/inventory.rst.j2"
   delegate_to: localhost
   run_once: true
-  #notify:
-  #  - Rebuild documentation
+  notify:
+    - Rebuild documentation
 
 - name: Generating environment dump documentation page
   template:
     src: "{{ item }}"
-    dest: "{{ playbook_dir }}/doc/_pages/dump.rst"
+    dest: "{{ playbook_dir }}/{{ hm_util_inspector__docs_dir }}/envdump.rst"
     mode: 0644
   with_first_found:
-    - "host_files/{{ inventory_hostname }}/dump.rst.j2"
-    - "group_files/servers-production/dump.rst.j2"
-    - "group_files/servers-development/dump.rst.j2"
-    - "group_files/servers-demo/dump.rst.j2"
-    - "group_files/servers/dump.rst.j2"
-    - "{{ role_path }}/templates/dump.rst.j2"
+    - "host_files/{{ inventory_hostname }}/envdump.rst.j2"
+    - "group_files/servers-{{ msms_server_type }}/envdump.rst.j2"
+    - "group_files/servers/envdump.rst.j2"
+    - "{{ role_path }}/templates/envdump.rst.j2"
   delegate_to: localhost
   run_once: true
-  #notify:
-  #  - Rebuild documentation
+  notify:
+    - Rebuild documentation
 
 - name: Generating inventory detail documentation page
   template:
     src: "{{ item }}"
-    dest: "{{ playbook_dir }}/doc/_pages/inventory/detail_{{ inventory_hostname }}.rst"
+    dest: "{{ playbook_dir }}/{{ hm_util_inspector__docs_dir }}/inventory/detail_{{ inventory_hostname }}.rst"
     mode: 0644
   with_first_found:
     - "host_files/{{ inventory_hostname }}/inventory_detail.rst.j2"
-    - "group_files/servers-production/inventory_detail.rst.j2"
-    - "group_files/servers-development/inventory_detail.rst.j2"
-    - "group_files/servers-demo/inventory_detail.rst.j2"
+    - "group_files/servers-{{ msms_server_type }}/inventory_detail.rst.j2"
     - "group_files/servers/inventory_detail.rst.j2"
     - "{{ role_path }}/templates/inventory_detail.rst.j2"
   delegate_to: localhost
-  #notify:
-  #  - Rebuild documentation
+  notify:
+    - Rebuild documentation
 
 - name: Generating inventory dump documentation page
   template:
     src: "{{ item }}"
-    dest: "{{ playbook_dir }}/doc/_pages/inventory/dump_{{ inventory_hostname }}.rst"
+    dest: "{{ playbook_dir }}/{{ hm_util_inspector__docs_dir }}/inventory/dump_{{ inventory_hostname }}.rst"
     mode: 0644
   with_first_found:
     - "host_files/{{ inventory_hostname }}/inventory_dump.rst.j2"
-    - "group_files/servers-production/inventory_dump.rst.j2"
-    - "group_files/servers-development/inventory_dump.rst.j2"
-    - "group_files/servers-demo/inventory_dump.rst.j2"
+    - "group_files/servers-{{ msms_server_type }}/inventory_dump.rst.j2"
     - "group_files/servers/inventory_dump.rst.j2"
     - "{{ role_path }}/templates/inventory_dump.rst.j2"
   delegate_to: localhost
-  #notify:
-  #  - Rebuild documentation
+  notify:
+    - Rebuild documentation

@@ -11,6 +11,19 @@
 #   git clone https://github.com/honzamach/ansible-role-util-inspector.git honzamach.util_inspector
 #
 
+#
+# Gather facts for all hosts in servers group.
+#
+- hosts: servers
+  remote_user: root
+  tasks:
+    - name: Re-gather facts from all servers
+      setup:
+      delegate_to: "{{ item }}"
+      delegate_facts: True
+      run_once: true
+      loop: "{{ groups['servers'] }}"
+
 - hosts: servers
   remote_user: root
   roles:

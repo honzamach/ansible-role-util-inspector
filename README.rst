@@ -23,76 +23,53 @@ Role Variables
 There are following internal role variables defined in ``defaults/main.yml`` file,
 that can be overriden and adjusted as needed:
 
-:envvar:`rs_pgsql__user`
-	Name of the UNIX system user for PostgreSQL database.
+:envvar:`hm_util_inspector__docs_dir`
+	Name of the directory to which to generate the documentation.
 
-	*Type:* ``string`` | *Default:* ``"postgres"``
-
-:envvar:`rs_pgsql__group`
-	Name of the UNIX system group for PostgreSQL database.
-
-	*Type:* ``string`` | *Default:* ``"postgres"``
-
-:envvar:`rs_pgsql__logdir`
-	Path to log file.
-
-	*Type:* ``string`` | *Default:* ``"/var/log/postgresql"``
-
-:envvar:`rs_pgsql__logrotate`
-	Log rotation switch (true/false).
-
-	*Type:* ``bool`` | *Default:* ``true``
-
-:envvar:`rs_pgsql__logrotate_options`
-	Log rotation options.
-
-	*Type:* ``list of strings``
-
-There are following internal Debian specific role variables defined in ``vars/debian.yml``
-file, that can be overriden and adjusted as needed:
-
-:envvar:`rs_pgsql__apt_key_url`
-	URL leading to GPG key for signing deb packages
-
-	*Type:* ``string`` | *Default:* ``"https://www.postgresql.org/media/keys/ACCC4CF8.asc"``
-
-:envvar:`rs_pgsql__apt_key_id`
-	Identifier of the signing key.
-
-	*Type:* ``string`` | *Default:* ``"ACCC4CF8"``
-
-:envvar:`rs_pgsql__apt_repository`
-	Location of PostgreSQL repository.
-
-	*Type:* ``string`` | *Default:* ``"deb http://apt.postgresql.org/pub/repos/apt/ {{ ansible_lsb['codename'] }}-pgdg main"``
-
-:envvar:`rs_pgsql__service_name`
-	Name of the PostgreSQL service.
-
-	*Type:* ``string`` | *Default:* ``"postgresql"``
-
-Additionally this role makes use of following built-in Ansible variables:
-
-:envvar:`ansible_lsb['codename']`
-	Debian distribution codename is used to generate correct APT repository URL.
+	*Type:* ``string`` | *Default:* ``"vault/docs"``
 
 
-Managed files
+Usage and customization
 --------------------------------------------------------------------------------
 
-This role directly manages content of following files on target system:
+This role is (attempted to be) written according to the `Ansible best practices <https://docs.ansible.com/ansible/latest/user_guide/playbooks_best_practices.html>`__. The default implementation should fit most users,
+however you may customize it by tweaking default variables and providing custom
+templates.
 
-* ``/etc/logrotate.d/postgresql-common``
+
+Variable customizations
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Most of the usefull variables are defined in ``defaults/main.yml`` file, so they
+can be easily overridden almost from `anywhere <https://docs.ansible.com/ansible/latest/user_guide/playbooks_variables.html#variable-precedence-where-should-i-put-a-variable>`__.
 
 
-Dependencies
+Template customizations
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+This roles uses *with_first_found* mechanism for all of its templates. If you do
+not like anything about built-in template files you may provide your own custom
+templates. For now please see the role tasks for list of all checked paths for
+each of the template files.
+
+
+Installation
 --------------------------------------------------------------------------------
 
-This role is not dependent on any other role.
+To install the role `honzamach.util_inspector <https://galaxy.ansible.com/honzamach/util_inspector>`__
+from `Ansible Galaxy <https://galaxy.ansible.com/>`__ please use variation of
+following command::
 
-Following roles have direct dependency on this role:
+    ansible-galaxy install honzamach.util_inspector
 
-* :ref:`app-mentat <section-role-app-mentat>`
+To install the role directly from `GitHub <https://github.com>`__ by cloning the
+`ansible-role-util-inspector <https://github.com/honzamach/ansible-role-util-inspector>`__
+repository please use variation of following command::
+
+    git clone https://github.com/honzamach/ansible-role-util-inspector.git honzamach.util_inspector
+
+Currently the advantage of using direct Git cloning is the ability to easily update
+the role when new version comes out.
 
 
 Example Playbook
@@ -100,22 +77,21 @@ Example Playbook
 
 Example content of inventory file ``inventory``::
 
-	[servers-svc-postgresql]
-	localhost
+    [servers]
+    localhost
 
 Example content of role playbook file ``playbook.yml``::
 
-	- hosts: servers-svc-postgresql
-	  remote_user: root
-	  roles:
-	    - role: svc-postgresql
-	  tags:
-	    - role-application
-	    - svc-postgresql
+    - hosts: servers
+      remote_user: root
+      roles:
+        - role: honzamach.util_inspector
+      tags:
+        - role-util-inspector
 
 Example usage::
 
-	ansible-playbook -i inventory playbook.yml
+    ansible-playbook -i inventory playbook.yml
 
 
 License
@@ -127,4 +103,4 @@ MIT
 Author Information
 --------------------------------------------------------------------------------
 
-Jan Mach <jan.mach@cesnet.cz>, CESNET, a.l.e.
+Jan Mach <honza.mach.ml@gmail.com>

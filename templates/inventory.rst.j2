@@ -26,19 +26,36 @@ Overview
      - Default IPv4
      - Default IPv6
 {% for iter_inventory_name in hostvars | sort %}
+
    * - :ref:`{{ iter_inventory_name }} <section-inventory-detail-{{ iter_inventory_name }}>`
      - {% if 'servers-production' in hostvars[iter_inventory_name].group_names %}prod{% elif 'servers-development' in hostvars[iter_inventory_name].group_names %}dev{% elif 'servers-demo' in hostvars[iter_inventory_name].group_names %}demo{% else %}none{% endif %}
 
+{% if 'ansible_lsb' in hostvars[iter_inventory_name] %}
      - {{ hostvars[iter_inventory_name].ansible_lsb.id }}
      - {{ hostvars[iter_inventory_name].ansible_lsb.release }}
      - {{ hostvars[iter_inventory_name].ansible_lsb.codename }}
-     - {{ hostvars[iter_inventory_name].ansible_userspace_architecture }}
-     - {{ hostvars[iter_inventory_name].ansible_kernel }}
-     - {{ hostvars[iter_inventory_name].ansible_product_name }}
-     - {{ hostvars[iter_inventory_name].ansible_product_serial }}
-     - {{ hostvars[iter_inventory_name].ansible_memtotal_mb }}
+{% else %}
+     - unknown
+     - unknown
+     - unknown
+{% endif %}
+{% for subkey in ('ansible_userspace_architecture', 'ansible_kernel', 'ansible_product_name', 'ansible_product_serial', 'ansible_memtotal_mb') %}
+{% if subkey in hostvars[iter_inventory_name] %}
+     - {{ hostvars[iter_inventory_name][subkey] }}
+{% else %}
+     - unknown
+{% endif %}
+{% endfor %}
+{% if 'ansible_default_ipv4' in hostvars[iter_inventory_name] %}
      - {{ hostvars[iter_inventory_name].ansible_default_ipv4.address }}
+{% else %}
+     - unknown
+{% endif %}
+{% if 'ansible_default_ipv4' in hostvars[iter_inventory_name] %}
      - {{ hostvars[iter_inventory_name].ansible_default_ipv6.address }}
+{% else %}
+     - unknown
+{% endif %}
 {% endfor %}
 
 
@@ -51,7 +68,7 @@ Server details
    :maxdepth: 1
    :glob:
 
-   inventory/detail_*
+   /vault/docs/inventory/detail_*
 
 
 .. _section-inventory-dump:
@@ -63,7 +80,7 @@ Server fact dumps
    :maxdepth: 1
    :glob:
 
-   inventory/dump_*
+   /vault/docs/inventory/dump_*
 
 
 Full environment dump
@@ -72,4 +89,4 @@ Full environment dump
 .. toctree::
    :maxdepth: 1
 
-   dump
+   /vault/docs/envdump
