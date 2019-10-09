@@ -41,8 +41,17 @@ Overview
 
 ================  ====================================
 
-* **Group memberships**: {{ group_names | join(', ') }}
-* **System administrators**: {{ hm_accounts__admins | join(', ') }}
+* **Group memberships**: 
+
+{% for gname in group_names %}
+  * {{ gname }}
+{% endfor %}
+
+* **System administrators**: 
+
+{% for aname in hm_accounts__admins %}
+  * {{ aname }}
+{% endfor %}
 
 
 .. _section-inventory-detail-{{ inventory_hostname }}-dump:

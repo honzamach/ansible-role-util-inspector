@@ -28,7 +28,7 @@ Overview
 {% for iter_inventory_name in hostvars | sort %}
 
    * - :ref:`{{ iter_inventory_name }} <section-inventory-detail-{{ iter_inventory_name }}>`
-     - {% if 'servers_production' in hostvars[iter_inventory_name].group_names %}prod{% elif 'servers_development' in hostvars[iter_inventory_name].group_names %}dev{% elif 'servers_testing' in hostvars[iter_inventory_name].group_names %}demo{% else %}none{% endif %}
+     - {% if 'servers_production' in hostvars[iter_inventory_name].group_names %}prod{% elif 'servers_development' in hostvars[iter_inventory_name].group_names %}devel{% elif 'servers_testing' in hostvars[iter_inventory_name].group_names %}test{% else %}none{% endif %}
 
 {% if 'ansible_lsb' in hostvars[iter_inventory_name] %}
      - {{ hostvars[iter_inventory_name].ansible_lsb.id }}
