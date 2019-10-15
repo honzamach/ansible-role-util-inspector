@@ -1,5 +1,13 @@
 ---
 
+- name: Detecting additional host documentation snippets
+  find:
+    paths: "{{ playbook_dir }}/host_files/{{ inventory_hostname}}/docs"
+    patterns: '_inc_description.rst'
+    file_type: file
+  delegate_to: localhost
+  register: hmui__inc_description
+
 - name: Managing local directory for documentation pages
   file:
     path: "{{ item }}"
@@ -7,6 +15,7 @@
     mode: 0755
   with_items:
     - "{{ playbook_dir }}/{{ hm_util_inspector__docs_dir }}"
+    - "{{ playbook_dir }}/{{ hm_util_inspector__docs_dir }}/dokuwiki"
     - "{{ playbook_dir }}/{{ hm_util_inspector__docs_dir }}/inventory"
     - "{{ playbook_dir }}/{{ hm_util_inspector__docs_dir }}/users"
   delegate_to: localhost
@@ -26,6 +35,19 @@
   run_once: true
   notify:
     - Rebuild documentation
+
+- name: Generating inventory overview documentation page (dokuwiki)
+  template:
+    src: "{{ item }}"
+    dest: "{{ playbook_dir }}/{{ hm_util_inspector__docs_dir }}/dokuwiki/inventory.dokuwiki"
+    mode: 0644
+  with_first_found:
+    - "host_files/{{ inventory_hostname }}/inventory.dokuwiki.j2"
+    - "group_files/servers-{{ msms_server_type }}/inventory.dokuwiki.j2"
+    - "group_files/servers/inventory.dokuwiki.j2"
+    - "{{ role_path }}/templates/inventory.dokuwiki.j2"
+  delegate_to: localhost
+  run_once: true
 
 - name: Generating environment dump documentation page
   template:

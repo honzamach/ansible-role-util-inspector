@@ -1,0 +1,34 @@
+====== Inventory ======
+
+
+===== Overview =====
+
+^ Host ^ Category ^ Type ^ Serial ^ Distribution ^ Location ^ Monitoring ^
+{% for iter_inventory_name in hostvars | sort %}
+| {% if 'hm_util_inspector__url_documentation' in hostvars[iter_inventory_name] %}[[{{ hostvars[iter_inventory_name].hm_util_inspector__url_documentation }}|{{ hostvars[iter_inventory_name].ansible_fqdn }}]]{% else %}{{ hostvars[iter_inventory_name].ansible_fqdn }}{% endif %} | {{ hostvars[iter_inventory_name].msms_server_type }} | {% if 'ansible_product_name' in hostvars[iter_inventory_name] %}{{ hostvars[iter_inventory_name].ansible_product_name }}{% else %}---{% endif %} | {% if 'hm_util_inspector__url_support' in hostvars[iter_inventory_name] and 'ansible_product_serial' in hostvars[iter_inventory_name] %}[[{{ hostvars[iter_inventory_name].hm_util_inspector__url_support }}|{{ hostvars[iter_inventory_name].ansible_product_serial }}]]{% elif 'hm_util_inspector__url_support' in hostvars[iter_inventory_name] %}[[{{ hostvars[iter_inventory_name].hm_util_inspector__url_support }}|---]]{% elif 'ansible_product_serial' in hostvars[iter_inventory_name] and 'VMware' not in hostvars[iter_inventory_name].ansible_product_name %}{{ hostvars[iter_inventory_name].ansible_product_serial }}{% else %}---{% endif %} | {% if 'ansible_lsb' in hostvars[iter_inventory_name] %}{{ hostvars[iter_inventory_name].ansible_lsb.id }} {{ hostvars[iter_inventory_name].ansible_lsb.release }} {{ hostvars[iter_inventory_name].ansible_lsb.codename }}{% else %}---{% endif %} | {% if 'hm_util_inspector__url_rackspace' in hostvars[iter_inventory_name] and 'hm_util_inspector__rackspace_allocation' in hostvars[iter_inventory_name] %}[[{{ hostvars[iter_inventory_name].hm_util_inspector__url_rackspace }}|{{ hostvars[iter_inventory_name].hm_util_inspector__rackspace_allocation }}]]{% elif 'hm_util_inspector__url_rackspace' in hostvars[iter_inventory_name] %}[[{{ hostvars[iter_inventory_name].hm_util_inspector__url_rackspace }}|---]]{% elif 'hm_util_inspector__rackspace_allocation' in hostvars[iter_inventory_name] %}{{ hostvars[iter_inventory_name].hm_util_inspector__rackspace_allocation }}{% else %}---{% endif %} | {% if 'hm_util_inspector__url_monitoring' in hostvars[iter_inventory_name]  %}[[{{ hostvars[iter_inventory_name].hm_util_inspector__url_monitoring }}|status]]{% else %}---{% endif %} |
+{% endfor %}
+
+===== Administration =====
+
+All these servers are managed via custom [[https://github.com/honzamach/msms|MSMS]] system based on [[https://www.ansible.com/|Ansible]] IT automation tool.
+
+Following is a quickstart recipe:
+<code>
+# Prepare necessary directories
+$ mkdir ~/Ansible
+$ cd ~/Ansible
+
+# Clone the MSMS base
+$ git clone https://github.com/honzamach/msms.git msms-local
+$ cd msms-local
+
+# Setup fresh server management environment
+$ make msms-setup
+</code>
+
+For more information about usage please read the online [[https://github.com/honzamach/msms|README]] file or local documentation:
+<code>
+# Generate and view documentation locally
+$ make docs
+$ make docs-view
+</code>

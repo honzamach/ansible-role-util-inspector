@@ -9,52 +9,107 @@ Inventory
 Overview
 --------------------------------------------------------------------------------
 
-.. list-table:: Server inventory overview
+.. list-table::
    :class: server-inventory
    :header-rows: 1
 
    * - Host
+     - Category
+     - Serial
+     - Tag
+     - Location
+     - Monitoring
+{% for iter_inventory_name in hostvars | sort %}
+
+   * - :ref:`{{ iter_inventory_name }} <section-inventory-detail-{{ iter_inventory_name }}>`
+     - {{ hostvars[iter_inventory_name].msms_server_type }}
+{% if 'ansible_product_serial' in hostvars[iter_inventory_name] %}
+{% if 'ansible_product_name' not in hostvars[iter_inventory_name] or 'VMware' not in hostvars[iter_inventory_name].ansible_product_name %}
+{% if 'hm_util_inspector__url_support' in hostvars[iter_inventory_name] %}
+     - `{{ hostvars[iter_inventory_name].ansible_product_serial }} <{{ hostvars[iter_inventory_name].hm_util_inspector__url_support }}>`__
+{% else %}
+     - {{ hostvars[iter_inventory_name].ansible_product_serial }}
+{% endif %}
+{% else %}
+     - ---
+{% endif %}
+{% else %}
+     - ---
+{% endif %}
+{% if 'hm_util_inspector__asset_tag' in hostvars[iter_inventory_name] %}
+{% if 'hm_util_inspector__url_inventory' in hostvars[iter_inventory_name] %}
+     - `{{ hostvars[iter_inventory_name].hm_util_inspector__asset_tag }} <{{ hostvars[iter_inventory_name].hm_util_inspector__url_inventory }}>`__
+{% else %}
+     - {{ hostvars[iter_inventory_name].hm_util_inspector__asset_tag }}
+{% endif %}
+{% else %}
+     - ---
+{% endif %}
+{% if 'hm_util_inspector__rackspace_allocation' in hostvars[iter_inventory_name] %}
+{% if 'hm_util_inspector__url_rackspace' in hostvars[iter_inventory_name] %}
+     - `{{ hostvars[iter_inventory_name].hm_util_inspector__rackspace_allocation }} <{{ hostvars[iter_inventory_name].hm_util_inspector__url_rackspace }}>`__
+{% else %}
+     - {{ hostvars[iter_inventory_name].hm_util_inspector__rackspace_allocation }}
+{% endif %}
+{% else %}
+     - ---
+{% endif %}
+{% if 'hm_util_inspector__url_monitoring' in hostvars[iter_inventory_name] %}
+     - `status <{{ hostvars[iter_inventory_name].hm_util_inspector__url_monitoring }}>`__
+{% else %}
+     - ---
+{% endif %}
+{% endfor %}
+
+
+.. _section-inventory-comparison:
+
+Performance comparison
+--------------------------------------------------------------------------------
+
+.. list-table::
+   :class: server-comparison
+   :header-rows: 1
+
+   * - Host
      - Type
-     - Distro
-     - Release
-     - Codename
+     - Distribution
      - Arch
      - Kernel
-     - Server
-     - Serial
      - RAM
+     - vCPUs
      - Default IPv4
      - Default IPv6
 {% for iter_inventory_name in hostvars | sort %}
 
    * - :ref:`{{ iter_inventory_name }} <section-inventory-detail-{{ iter_inventory_name }}>`
-     - {% if 'servers_production' in hostvars[iter_inventory_name].group_names %}prod{% elif 'servers_development' in hostvars[iter_inventory_name].group_names %}devel{% elif 'servers_testing' in hostvars[iter_inventory_name].group_names %}test{% else %}none{% endif %}
-
-{% if 'ansible_lsb' in hostvars[iter_inventory_name] %}
-     - {{ hostvars[iter_inventory_name].ansible_lsb.id }}
-     - {{ hostvars[iter_inventory_name].ansible_lsb.release }}
-     - {{ hostvars[iter_inventory_name].ansible_lsb.codename }}
+{% if 'ansible_product_name' in hostvars[iter_inventory_name] %}
+     - {{ hostvars[iter_inventory_name].ansible_product_name }}
 {% else %}
-     - unknown
-     - unknown
-     - unknown
+     - -unknown-
 {% endif %}
-{% for subkey in ('ansible_userspace_architecture', 'ansible_kernel', 'ansible_product_name', 'ansible_product_serial', 'ansible_memtotal_mb') %}
+{% if 'ansible_lsb' in hostvars[iter_inventory_name] %}
+     - {{ hostvars[iter_inventory_name].ansible_lsb.id }} {{ hostvars[iter_inventory_name].ansible_lsb.release }} {{ hostvars[iter_inventory_name].ansible_lsb.codename }}
+{% else %}
+     - -unknown-
+{% endif %}
+{% for subkey in ('ansible_userspace_architecture', 'ansible_kernel', 'ansible_memtotal_mb') %}
 {% if subkey in hostvars[iter_inventory_name] %}
      - {{ hostvars[iter_inventory_name][subkey] }}
 {% else %}
-     - unknown
+     - -unknown-
 {% endif %}
 {% endfor %}
+     - {{ hostvars[iter_inventory_name].ansible_processor_vcpus }} x {{ hostvars[iter_inventory_name].ansible_processor[2] }}
 {% if 'ansible_default_ipv4' in hostvars[iter_inventory_name] %}
      - {{ hostvars[iter_inventory_name].ansible_default_ipv4.address }}
 {% else %}
-     - unknown
+     - -unknown-
 {% endif %}
-{% if 'ansible_default_ipv4' in hostvars[iter_inventory_name] %}
+{% if 'ansible_default_ipv6' in hostvars[iter_inventory_name] %}
      - {{ hostvars[iter_inventory_name].ansible_default_ipv6.address }}
 {% else %}
-     - unknown
+     - -unknown-
 {% endif %}
 {% endfor %}
 
