@@ -27,8 +27,6 @@
     dest: "{{ playbook_dir }}/{{ hm_util_inspector__docs_dir }}/section_01_inventory.rst"
     mode: 0644
   with_first_found:
-    - "host_files/{{ inventory_hostname }}/inventory.rst.j2"
-    - "group_files/servers-{{ msms_server_type }}/inventory.rst.j2"
     - "group_files/servers/inventory.rst.j2"
     - "{{ role_path }}/templates/inventory.rst.j2"
   delegate_to: localhost
@@ -42,8 +40,6 @@
     dest: "{{ playbook_dir }}/{{ hm_util_inspector__docs_dir }}/dokuwiki/inventory.dokuwiki"
     mode: 0644
   with_first_found:
-    - "host_files/{{ inventory_hostname }}/inventory.dokuwiki.j2"
-    - "group_files/servers-{{ msms_server_type }}/inventory.dokuwiki.j2"
     - "group_files/servers/inventory.dokuwiki.j2"
     - "{{ role_path }}/templates/inventory.dokuwiki.j2"
   delegate_to: localhost
@@ -55,8 +51,6 @@
     dest: "{{ playbook_dir }}/{{ hm_util_inspector__docs_dir }}/envdump.rst"
     mode: 0644
   with_first_found:
-    - "host_files/{{ inventory_hostname }}/envdump.rst.j2"
-    - "group_files/servers-{{ msms_server_type }}/envdump.rst.j2"
     - "group_files/servers/envdump.rst.j2"
     - "{{ role_path }}/templates/envdump.rst.j2"
   delegate_to: localhost
