@@ -58,7 +58,7 @@ Overview
 * **System administrators**: 
 
 {% for aname in hm_accounts__admins %}
-  * {{ aname }}{% if aname == primary_admin %} **(PRIMARY ADMIN)**{% endif %}
+  * :ref:`{{ aname }} <section-users-detail-{{ aname }}>`{% if aname == primary_admin %} **(PRIMARY ADMIN)**{% endif %}
 
 {% endfor %}
 
