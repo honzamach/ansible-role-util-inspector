@@ -1,5 +1,10 @@
 ---
 
+- name: Including secret configurations
+  include_vars: "vault/secrets.yml"
+  tags:
+    - always
+
 - name: Detecting additional host documentation snippets
   find:
     paths: "{{ playbook_dir }}/host_files/{{ inventory_hostname}}/docs"
@@ -85,3 +90,25 @@
   delegate_to: localhost
   notify:
     - Rebuild documentation
+
+#-------------------------------------------------------------------------------
+
+- name: Generating user overview documentation page
+  template:
+    src: "{{ item }}"
+    dest: "{{ playbook_dir }}/vault/docs/section_02_users.rst"
+    mode: 0644
+  with_first_found:
+    - "group_files/servers/users.rst.j2"
+    - "{{ role_path }}/templates/users.rst.j2"
+  run_once: true
+  delegate_to: localhost
+
+- include_tasks: _func.inspect_user.yml
+  vars:
+    ivar_userid: "{{ outer_item.0 }}"
+    ivar_userdata: "{{ outer_item.1 }}"
+  loop: "{{ site_users | dictsort }}"
+  loop_control:
+    loop_var: outer_item
+    label: "Inspecting user {{ outer_item.0 }}"

@@ -1,0 +1,47 @@
+.. _section-users:
+
+Users
+================================================================================
+
+.. _section-users-overview:
+
+Overview
+--------------------------------------------------------------------------------
+
+Following table contains list of all user accounts currently defined in 
+:envvar:`site_users` configuration directive:
+
+.. list-table::
+   :class: users-overview
+   :header-rows: 1
+
+   * - UID
+     - Name
+     - :abbr:`#ADM (Number of hosts with administrator rights)`
+     - :abbr:`#USR (Number of hosts with unprivileged access)`
+     - Attributes
+{% for userid, userdata in site_users | dictsort %}
+{% set ns = namespace(hosts_padmin=0, hosts_admin=0, hosts_user=0) %}
+{% for hostid, hostdata in hostvars | dictsort %}
+    {% if 'primary_admin' in hostdata and userid == hostdata.primary_admin %}
+        {% set ns.hosts_padmin = ns.hosts_padmin + 1 %}
+    {% endif %}
+{% endfor %}
+{% for hostid, hostdata in hostvars | dictsort %}
+    {% if 'hm_accounts__admins' in hostdata and userid in hostdata.hm_accounts__admins %}
+        {% set ns.hosts_admin = ns.hosts_admin + 1 %}
+    {% endif %}
+{% endfor %}
+{% for hostid, hostdata in hostvars | dictsort %}
+    {% if 'hm_accounts__users' in hostdata and userid in hostdata.hm_accounts__users %}
+        {% set ns.hosts_user = ns.hosts_user + 1 %}
+    {% endif %}
+{% endfor %}
+
+   * - :ref:`{{ userid }} <section-users-detail-{{ userid }}>`{% if ns.hosts_padmin > 0 %} **(PRIMARY)**{% endif %}
+
+     - {{ userdata.name }}
+     - {{ ns.hosts_admin }}
+     - {{ ns.hosts_user }}
+     - {% if 'ssh_keys' in userdata and userdata.ssh_keys %}:abbr:`+SSH+ (User has {{ userdata.ssh_keys | length }} SSH keys)`{% else %}:abbr:`-ssh- (User has no SSH keys)`{% endif %} | {% if 'workstations' in userdata and userdata.workstations %}:abbr:`+WS+ (User has {{ userdata.workstations | length }} workstation IP addresses)`{% else %}:abbr:`-ws- (User has no workstation IP addresses)`{% endif %}
+{% endfor %}

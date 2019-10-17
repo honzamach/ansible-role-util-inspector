@@ -1,0 +1,65 @@
+.. _section-users-detail-{{ ivar_userid }}:
+
+User '{{ ivar_userid }}' ({{ ivar_userdata.name }})
+================================================================================
+
+{% set ns = namespace(hosts_admin=0, hosts_user=0) %}
+{% for hostid, hostdata in hostvars | dictsort %}
+    {% if 'hm_accounts__admins' in hostdata and ivar_userid in hostdata.hm_accounts__admins %}
+        {% set ns.hosts_admin = ns.hosts_admin + 1 %}
+    {% endif %}
+{% endfor %}
+{% for hostid, hostdata in hostvars | dictsort %}
+    {% if 'hm_accounts__users' in hostdata and ivar_userid in hostdata.hm_accounts__users %}
+        {% set ns.hosts_user = ns.hosts_user + 1 %}
+    {% endif %}
+{% endfor %}
+
+**Admin access:**
+
+{% if ns.hosts_admin > 0 %}
+{% for hostid, hostdata in hostvars | dictsort %}
+{% if 'hm_accounts__admins' in hostdata and ivar_userid in hostdata.hm_accounts__admins %}
+* :ref:`section-inventory-detail-{{ hostid }}`{% if 'primary_admin' in hostdata and ivar_userid == hostdata.primary_admin %} **(PRIMARY)**{% endif %}
+
+{% endif %}
+{% endfor %}
+{% else %}
+* No hosts
+{% endif %}
+
+**Unprivileged access:**
+
+{% if ns.hosts_user > 0 %}
+{% for hostid, hostdata in hostvars | dictsort %}
+{% if 'hm_accounts__users' in hostdata and ivar_userid in hostdata.hm_accounts__users %}
+* :ref:`section-inventory-detail-{{ hostid }}`
+
+{% endif %}
+{% endfor %}
+{% else %}
+* No hosts
+{% endif %}
+
+**SSH keys:**
+
+{% if 'ssh_keys' in ivar_userdata and ivar_userdata.ssh_keys %}
+.. code-block::
+
+{% for sshkey in ivar_userdata.ssh_keys %}
+    {{ sshkey }}
+{% endfor %}
+{% else %}
+* No keys
+{% endif %}
+
+**Workstations:**
+
+{% if 'workstations' in ivar_userdata and ivar_userdata.workstations %}
+{% for workstation in ivar_userdata.workstations %}
+* {{ workstation }}
+
+{% endfor %}
+{% else %}
+* No workstations
+{% endif %}
