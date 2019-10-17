@@ -112,3 +112,52 @@
   loop_control:
     loop_var: outer_item
     label: "Inspecting user {{ outer_item.0 }}"
+
+#-------------------------------------------------------------------------------
+
+- block:
+
+    - name: Detecting list of available Nagios NRPE commands
+      shell: "grep -v \"^\\s*#\" /etc/nagios/nrpe.cfg /etc/nagios/nrpe_local.cfg /etc/nagios/nrpe.d/*.cfg | grep \"command\\[\" | sed 's/.*:command\\[//' | sed 's/\\]=.*//'"
+      register: current_nrpe_commands
+      changed_when: False
+
+    - debug: var=current_nrpe_commands
+      tags:
+        - debug
+
+    - set_fact:
+        current_nrpe_command_list: "{{ current_nrpe_commands.stdout_lines }}"
+
+    - debug: var=current_nrpe_command_list
+      tags:
+        - debug
+
+    - name: Generating monitoring overview documentation page
+      template:
+        src: "{{ item }}"
+        dest: "{{ playbook_dir }}/vault/docs/section_03_monitoring.rst"
+        mode: 0644
+      with_first_found:
+        - "group_files/servers/monitoring.rst.j2"
+        - "{{ role_path }}/templates/monitoring.rst.j2"
+      run_once: true
+      delegate_to: localhost
+
+    - name: Generating monitoring detail documentation pages
+      template:
+        src: "{{ item }}"
+        dest: "{{ playbook_dir }}/vault/docs/monitoring_detail_{{inventory_hostname}}.rst"
+        mode: 0644
+      with_first_found:
+        - "host_files/{{ inventory_hostname }}/monitoring_detail.rst.j2"
+        - "group_files/servers-{{ msms_server_type }}/monitoring_detail.rst.{{ ansible_lsb['codename'] }}.j2"
+        - "group_files/servers-{{ msms_server_type }}/monitoring_detail.rst.j2"
+        - "group_files/servers/monitoring_detail.rst.{{ ansible_lsb['codename'] }}.j2"
+        - "group_files/servers/monitoring_detail.rst.j2"
+        - "{{ role_path }}/templates/monitoring_detail.rst.{{ ansible_lsb['codename'] }}.j2"
+        - "{{ role_path }}/templates/monitoring_detail.rst.j2"
+      delegate_to: localhost
+
+  when: '"servers_monitored" in group_names'
+
