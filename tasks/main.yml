@@ -1,13 +1,8 @@
 ---
 
-- name: Including secret configurations
-  include_vars: "vault/secrets.yml"
-  tags:
-    - always
-
 - name: Detecting additional host documentation snippets
   find:
-    paths: "{{ playbook_dir }}/host_files/{{ inventory_hostname}}/docs"
+    paths: "{{ playbook_dir }}/inventory/host_files/{{ inventory_hostname}}/honzamach.util_inspector"
     patterns: '_inc_description.rst'
     file_type: file
   delegate_to: localhost
@@ -22,6 +17,7 @@
     - "{{ playbook_dir }}/{{ hm_util_inspector__docs_dir }}"
     - "{{ playbook_dir }}/{{ hm_util_inspector__docs_dir }}/dokuwiki"
     - "{{ playbook_dir }}/{{ hm_util_inspector__docs_dir }}/inventory"
+    - "{{ playbook_dir }}/{{ hm_util_inspector__docs_dir }}/monitoring"
     - "{{ playbook_dir }}/{{ hm_util_inspector__docs_dir }}/users"
   delegate_to: localhost
   run_once: true
@@ -32,7 +28,7 @@
     dest: "{{ playbook_dir }}/{{ hm_util_inspector__docs_dir }}/section_01_inventory.rst"
     mode: 0644
   with_first_found:
-    - "group_files/servers/inventory.rst.j2"
+    - "inventory/group_files/servers/honzamach.util_inspector/inventory.rst.j2"
     - "{{ role_path }}/templates/inventory.rst.j2"
   delegate_to: localhost
   run_once: true
@@ -45,7 +41,7 @@
     dest: "{{ playbook_dir }}/{{ hm_util_inspector__docs_dir }}/dokuwiki/inventory.dokuwiki"
     mode: 0644
   with_first_found:
-    - "group_files/servers/inventory.dokuwiki.j2"
+    - "inventory/group_files/servers/honzamach.util_inspector/inventory.dokuwiki.j2"
     - "{{ role_path }}/templates/inventory.dokuwiki.j2"
   delegate_to: localhost
   run_once: true
@@ -56,7 +52,7 @@
     dest: "{{ playbook_dir }}/{{ hm_util_inspector__docs_dir }}/envdump.rst"
     mode: 0644
   with_first_found:
-    - "group_files/servers/envdump.rst.j2"
+    - "inventory/group_files/servers/honzamach.util_inspector/envdump.rst.j2"
     - "{{ role_path }}/templates/envdump.rst.j2"
   delegate_to: localhost
   run_once: true
@@ -69,9 +65,9 @@
     dest: "{{ playbook_dir }}/{{ hm_util_inspector__docs_dir }}/inventory/detail_{{ inventory_hostname }}.rst"
     mode: 0644
   with_first_found:
-    - "host_files/{{ inventory_hostname }}/inventory_detail.rst.j2"
-    - "group_files/servers-{{ msms_server_type }}/inventory_detail.rst.j2"
-    - "group_files/servers/inventory_detail.rst.j2"
+    - "inventory/host_files/{{ inventory_hostname }}/honzamach.util_inspector/inventory_detail.rst.j2"
+    - "inventory/group_files/servers_{{ msms_server_type }}/honzamach.util_inspector/inventory_detail.rst.j2"
+    - "inventory/group_files/servers/honzamach.util_inspector/inventory_detail.rst.j2"
     - "{{ role_path }}/templates/inventory_detail.rst.j2"
   delegate_to: localhost
   notify:
@@ -83,9 +79,9 @@
     dest: "{{ playbook_dir }}/{{ hm_util_inspector__docs_dir }}/inventory/dump_{{ inventory_hostname }}.rst"
     mode: 0644
   with_first_found:
-    - "host_files/{{ inventory_hostname }}/inventory_dump.rst.j2"
-    - "group_files/servers-{{ msms_server_type }}/inventory_dump.rst.j2"
-    - "group_files/servers/inventory_dump.rst.j2"
+    - "inventory/host_files/{{ inventory_hostname }}/honzamach.util_inspector/inventory_dump.rst.j2"
+    - "inventory/group_files/servers_{{ msms_server_type }}/honzamach.util_inspector/inventory_dump.rst.j2"
+    - "inventory/group_files/servers/honzamach.util_inspector/inventory_dump.rst.j2"
     - "{{ role_path }}/templates/inventory_dump.rst.j2"
   delegate_to: localhost
   notify:
@@ -96,10 +92,10 @@
 - name: Generating user overview documentation page
   template:
     src: "{{ item }}"
-    dest: "{{ playbook_dir }}/vault/docs/section_02_users.rst"
+    dest: "{{ playbook_dir }}/{{ hm_util_inspector__docs_dir }}/section_02_users.rst"
     mode: 0644
   with_first_found:
-    - "group_files/servers/users.rst.j2"
+    - "inventory/group_files/servers/honzamach.util_inspector/users.rst.j2"
     - "{{ role_path }}/templates/users.rst.j2"
   run_once: true
   delegate_to: localhost
@@ -136,10 +132,10 @@
     - name: Generating monitoring overview documentation page
       template:
         src: "{{ item }}"
-        dest: "{{ playbook_dir }}/vault/docs/section_03_monitoring.rst"
+        dest: "{{ playbook_dir }}/{{ hm_util_inspector__docs_dir }}/section_03_monitoring.rst"
         mode: 0644
       with_first_found:
-        - "group_files/servers/monitoring.rst.j2"
+        - "inventory/group_files/servers/honzamach.util_inspector/monitoring.rst.j2"
         - "{{ role_path }}/templates/monitoring.rst.j2"
       run_once: true
       delegate_to: localhost
@@ -147,15 +143,12 @@
     - name: Generating monitoring detail documentation pages
       template:
         src: "{{ item }}"
-        dest: "{{ playbook_dir }}/vault/docs/monitoring_detail_{{inventory_hostname}}.rst"
+        dest: "{{ playbook_dir }}/{{ hm_util_inspector__docs_dir }}/monitoring/detail_{{inventory_hostname}}.rst"
         mode: 0644
       with_first_found:
-        - "host_files/{{ inventory_hostname }}/monitoring_detail.rst.j2"
-        - "group_files/servers-{{ msms_server_type }}/monitoring_detail.rst.{{ ansible_lsb['codename'] }}.j2"
-        - "group_files/servers-{{ msms_server_type }}/monitoring_detail.rst.j2"
-        - "group_files/servers/monitoring_detail.rst.{{ ansible_lsb['codename'] }}.j2"
-        - "group_files/servers/monitoring_detail.rst.j2"
-        - "{{ role_path }}/templates/monitoring_detail.rst.{{ ansible_lsb['codename'] }}.j2"
+        - "inventory/host_files/{{ inventory_hostname }}/honzamach.util_inspector/monitoring_detail.rst.j2"
+        - "group_files/servers_{{ msms_server_type }}/honzamach.util_inspector/monitoring_detail.rst.j2"
+        - "group_files/servers/honzamach.util_inspector/monitoring_detail.rst.j2"
         - "{{ role_path }}/templates/monitoring_detail.rst.j2"
       delegate_to: localhost
 
