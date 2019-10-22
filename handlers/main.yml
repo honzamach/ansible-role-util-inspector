@@ -1,6 +1,6 @@
 ---
 
 - name: Rebuild documentation
-  shell: "make docs"
+  shell: "make docs-html"
   delegate_to: localhost
   run_once: true
