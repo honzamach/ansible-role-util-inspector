@@ -16,6 +16,7 @@
   with_items:
     - "{{ playbook_dir }}/{{ hm_util_inspector__docs_dir }}"
     - "{{ playbook_dir }}/{{ hm_util_inspector__docs_dir }}/dokuwiki"
+    - "{{ playbook_dir }}/{{ hm_util_inspector__docs_dir }}/envdump"
     - "{{ playbook_dir }}/{{ hm_util_inspector__docs_dir }}/inventory"
     - "{{ playbook_dir }}/{{ hm_util_inspector__docs_dir }}/monitoring"
     - "{{ playbook_dir }}/{{ hm_util_inspector__docs_dir }}/users"
@@ -49,7 +50,7 @@
 - name: Generating environment dump documentation page
   template:
     src: "{{ item }}"
-    dest: "{{ playbook_dir }}/{{ hm_util_inspector__docs_dir }}/envdump.rst"
+    dest: "{{ playbook_dir }}/{{ hm_util_inspector__docs_dir }}/section_99_envdump.rst"
     mode: 0644
   with_first_found:
     - "inventory/group_files/servers/honzamach.util_inspector/envdump.rst.j2"
@@ -76,13 +77,13 @@
 - name: Generating inventory dump documentation page
   template:
     src: "{{ item }}"
-    dest: "{{ playbook_dir }}/{{ hm_util_inspector__docs_dir }}/inventory/dump_{{ inventory_hostname }}.rst"
+    dest: "{{ playbook_dir }}/{{ hm_util_inspector__docs_dir }}/envdump/detail_{{ inventory_hostname }}.rst"
     mode: 0644
   with_first_found:
-    - "inventory/host_files/{{ inventory_hostname }}/honzamach.util_inspector/inventory_dump.rst.j2"
-    - "inventory/group_files/servers_{{ msms_server_type }}/honzamach.util_inspector/inventory_dump.rst.j2"
-    - "inventory/group_files/servers/honzamach.util_inspector/inventory_dump.rst.j2"
-    - "{{ role_path }}/templates/inventory_dump.rst.j2"
+    - "inventory/host_files/{{ inventory_hostname }}/honzamach.util_inspector/envdump_detail.rst.j2"
+    - "inventory/group_files/servers_{{ msms_server_type }}/honzamach.util_inspector/envdump_detail.rst.j2"
+    - "inventory/group_files/servers/honzamach.util_inspector/envdump_detail.rst.j2"
+    - "{{ role_path }}/templates/envdump_detail.rst.j2"
   delegate_to: localhost
   notify:
     - Rebuild documentation

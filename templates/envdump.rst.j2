@@ -4,6 +4,18 @@ Full environment dump
 ================================================================================
 
 
+.. _section-envdump-hosts:
+
+Host fact dumps
+--------------------------------------------------------------------------------
+
+.. toctree::
+   :maxdepth: 1
+   :glob:
+
+   /inventory/docs/envdump/detail_*
+
+
 VARIABLES ("vars")
 --------------------------------------------------------------------------------
 
@@ -42,4 +54,3 @@ HOST variables ("hostvars")
 .. code-block:: json
 
 {{ hostvars | to_nice_json | indent(width=4, first=True, blank=True) }}
-
