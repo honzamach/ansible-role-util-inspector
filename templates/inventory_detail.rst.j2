@@ -19,7 +19,7 @@ Server **{{ ansible_hostname }}**
 Description
 -------------------------------------------------------------------------------------------
 
-.. include:: /host_files/{{ inventory_hostname }}/docs/_inc_description.rst
+.. include:: /inventory/host_files/{{ inventory_hostname}}/honzamach.util_inspector/_inc_description.rst
 
 {% endif %}
 
@@ -35,6 +35,7 @@ Overview
 **Kernel**        {{ ansible_kernel }}
 **Type**          {{ ansible_product_name }}
 **Serial**        {% if hm_util_inspector__url_support is defined %}`{{ ansible_product_serial }} <hm_util_inspector__url_support>`__{% else %}{{ ansible_product_serial }}{% endif %}
+
 **RAM**           {{ ansible_memtotal_mb }}
 **vCPUs**         {{ ansible_processor_vcpus }} x {{ ansible_processor[2] }} ({{ ansible_processor_count }} x {{ ansible_processor_cores }} cores x {{ ansible_processor_threads_per_core }} threads)
 **Default IPv4**  {{ ansible_default_ipv4.address }}

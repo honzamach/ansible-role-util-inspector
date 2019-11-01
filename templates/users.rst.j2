@@ -3,6 +3,7 @@
 Users
 ================================================================================
 
+
 .. _section-users-overview:
 
 Overview
@@ -45,3 +46,15 @@ Following table contains list of all user accounts currently defined in
      - {{ ns.hosts_user }}
      - {% if 'ssh_keys' in userdata and userdata.ssh_keys %}:abbr:`+SSH+ (User has {{ userdata.ssh_keys | length }} SSH keys)`{% else %}:abbr:`-ssh- (User has no SSH keys)`{% endif %} | {% if 'workstations' in userdata and userdata.workstations %}:abbr:`+WS+ (User has {{ userdata.workstations | length }} workstation IP addresses)`{% else %}:abbr:`-ws- (User has no workstation IP addresses)`{% endif %}
 {% endfor %}
+
+
+.. _section-users-list:
+
+User list
+--------------------------------------------------------------------------------
+
+.. toctree::
+   :maxdepth: 1
+   :glob:
+
+   /inventory/docs/users/detail_*
