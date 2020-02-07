@@ -11,9 +11,6 @@
 #   git clone https://github.com/honzamach/ansible-role-util-inspector.git honzamach.util_inspector
 #
 
-#
-# Gather facts for all hosts in servers group.
-#
 - hosts: servers
   remote_user: root
   tasks:

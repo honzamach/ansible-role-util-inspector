@@ -1,6 +1,3 @@
 ---
 
-#
-# Name of the directory to which to generate the documentation.
-#
 hm_util_inspector__docs_dir: inventory/docs

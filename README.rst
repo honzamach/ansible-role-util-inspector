@@ -3,55 +3,25 @@
 Role **util_inspector**
 ================================================================================
 
-Ansible role for inspecting target systems and generating documentation.
+.. note::
+
+    This documentation page and role itself is still work in progress.
 
 * `Ansible Galaxy page <https://galaxy.ansible.com/honzamach/util_inspector>`__
 * `GitHub repository <https://github.com/honzamach/ansible-role-util_inspector>`__
 * `Travis CI page <https://travis-ci.org/honzamach/ansible-role-util_inspector>`__
 
+Ansible role for inspecting target systems and generating inventory documentation.
 
-Requirements
---------------------------------------------------------------------------------
+Currently following documentation sections are generated:
 
-Python2 with pip utility and Python3 with pip3 utility should already be installed
-on target system.
-
-
-Role Variables
---------------------------------------------------------------------------------
-
-There are following internal role variables defined in ``defaults/main.yml`` file,
-that can be overriden and adjusted as needed:
-
-:envvar:`hm_util_inspector__docs_dir`
-	Name of the directory to which to generate the documentation.
-
-	*Type:* ``string`` | *Default:* ``"vault/docs"``
+* **Inventory** - Overview of all your managed servers with most important parameters
+  displayed neatly in table and with links to server detail pages.
+* **Users** - Overview of all your users with links to user detail pages.
+* ** Monitoring** - Overview of monitoring setup of your servers.
 
 
-Usage and customization
---------------------------------------------------------------------------------
-
-This role is (attempted to be) written according to the `Ansible best practices <https://docs.ansible.com/ansible/latest/user_guide/playbooks_best_practices.html>`__. The default implementation should fit most users,
-however you may customize it by tweaking default variables and providing custom
-templates.
-
-
-Variable customizations
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-Most of the usefull variables are defined in ``defaults/main.yml`` file, so they
-can be easily overridden almost from `anywhere <https://docs.ansible.com/ansible/latest/user_guide/playbooks_variables.html#variable-precedence-where-should-i-put-a-variable>`__.
-
-
-Template customizations
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-This roles uses *with_first_found* mechanism for all of its templates. If you do
-not like anything about built-in template files you may provide your own custom
-templates. For now please see the role tasks for list of all checked paths for
-each of the template files.
-
+.. _section-role-util-inspector-installation:
 
 Installation
 --------------------------------------------------------------------------------
@@ -72,35 +42,43 @@ Currently the advantage of using direct Git cloning is the ability to easily upd
 the role when new version comes out.
 
 
-Example Playbook
+.. _section-role-util-inspector-usage:
+
+Usage
 --------------------------------------------------------------------------------
 
-Example content of inventory file ``inventory``::
-
-    [servers]
-    localhost
-
-Example content of role playbook file ``playbook.yml``::
-
-    - hosts: servers
-      remote_user: root
-      roles:
-        - role: honzamach.util_inspector
-      tags:
-        - role-util-inspector
+Use attached role playbook file ``role_util_inspector.yml``, there is no need
+for customizations.
 
 Example usage::
 
-    ansible-playbook -i inventory playbook.yml
+    # Run everything:
+    ansible-playbook --ask-vault-pass --inventory inventory role_util_inspector.yml
 
 
-License
+.. _section-role-util-inspector-variables:
+
+Configuration variables
 --------------------------------------------------------------------------------
 
-MIT
+
+Internal role variables
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. envvar:: hm_util_inspector__docs_dir
+
+	  Name of the directory to which to generate the documentation.
+
+    * *Datatype:* ``string``
+    * *Default:* ``"inventory/docs"``
 
 
-Author Information
+.. _section-role-util-inspector-author:
+
+Author and license
 --------------------------------------------------------------------------------
 
-Jan Mach <honza.mach.ml@gmail.com>
+| *Copyright:* (C) since 2019 Honza Mach <honza.mach.ml@gmail.com>
+| *Author:* Honza Mach <honza.mach.ml@gmail.com>
+| Use of this role is governed by the MIT license, see LICENSE file.
+|
