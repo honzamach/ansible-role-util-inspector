@@ -1,56 +1,40 @@
-.. _section-envdump:
-
 Full environment dump
 ================================================================================
 
-
-.. _section-envdump-hosts:
-
-Host fact dumps
+Table of contents:
 --------------------------------------------------------------------------------
 
-.. toctree::
-   :maxdepth: 1
-   :glob:
-
-   /inventory/docs/envdump/detail_*
-
+1. VARIABLES ("vars")
+2. ENVIRONMENT variable ("environment")
+3. GROUP NAMES variable ("group_names")
+4. GROUPS variable ("groups")
+5. HOST variables ("hostvars")
 
 VARIABLES ("vars")
 --------------------------------------------------------------------------------
 
-.. code-block:: json
-
-{{ vars | to_nice_json | indent(width=4, first=True, blank=True) }}
+{{ vars | to_nice_json }}
 
 
 ENVIRONMENT variable ("environment")
 --------------------------------------------------------------------------------
 
-.. code-block:: json
-
-{{ environment | to_nice_json | indent(width=4, first=True, blank=True) }}
+{{ environment | to_nice_json }}
 
 
 GROUP NAMES variable ("group_names")
 --------------------------------------------------------------------------------
 
-.. code-block:: json
-
-{{ group_names | to_nice_json | indent(width=4, first=True, blank=True) }}
+{{ group_names | to_nice_json }}
 
 
 GROUPS variable ("groups")
 --------------------------------------------------------------------------------
 
-.. code-block:: json
-
-{{ groups | to_nice_json | indent(width=4, first=True, blank=True) }}
+{{ groups | to_nice_json }}
 
 
 HOST variables ("hostvars")
 --------------------------------------------------------------------------------
 
-.. code-block:: json
-
-{{ hostvars | to_nice_json | indent(width=4, first=True, blank=True) }}
+{{ hostvars | to_nice_json }}

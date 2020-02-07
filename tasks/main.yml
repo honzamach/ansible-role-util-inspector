@@ -47,19 +47,6 @@
   delegate_to: localhost
   run_once: true
 
-- name: Generating environment dump documentation page
-  template:
-    src: "{{ item }}"
-    dest: "{{ playbook_dir }}/{{ hm_util_inspector__docs_dir }}/section_99_envdump.rst"
-    mode: 0644
-  with_first_found:
-    - "inventory/group_files/servers/honzamach.util_inspector/envdump.rst.j2"
-    - "{{ role_path }}/templates/envdump.rst.j2"
-  delegate_to: localhost
-  run_once: true
-  notify:
-    - Rebuild documentation
-
 - name: Generating inventory detail documentation page
   template:
     src: "{{ item }}"
@@ -74,20 +61,6 @@
   notify:
     - Rebuild documentation
 
-- name: Generating inventory dump documentation page
-  template:
-    src: "{{ item }}"
-    dest: "{{ playbook_dir }}/{{ hm_util_inspector__docs_dir }}/envdump/detail_{{ inventory_hostname }}.rst"
-    mode: 0644
-  with_first_found:
-    - "inventory/host_files/{{ inventory_hostname }}/honzamach.util_inspector/envdump_detail.rst.j2"
-    - "inventory/group_files/servers_{{ msms_server_type }}/honzamach.util_inspector/envdump_detail.rst.j2"
-    - "inventory/group_files/servers/honzamach.util_inspector/envdump_detail.rst.j2"
-    - "{{ role_path }}/templates/envdump_detail.rst.j2"
-  delegate_to: localhost
-  notify:
-    - Rebuild documentation
-
 #-------------------------------------------------------------------------------
 
 - name: Generating user overview documentation page
@@ -98,8 +71,8 @@
   with_first_found:
     - "inventory/group_files/servers/honzamach.util_inspector/users.rst.j2"
     - "{{ role_path }}/templates/users.rst.j2"
-  run_once: true
   delegate_to: localhost
+  run_once: true
 
 - include_tasks: _func.inspect_user.yml
   vars:
@@ -138,8 +111,8 @@
       with_first_found:
         - "inventory/group_files/servers/honzamach.util_inspector/monitoring.rst.j2"
         - "{{ role_path }}/templates/monitoring.rst.j2"
-      run_once: true
       delegate_to: localhost
+      run_once: true
 
     - name: Generating monitoring detail documentation pages
       template:
@@ -154,4 +127,40 @@
       delegate_to: localhost
 
   when: '"servers_monitored" in group_names'
+
+#-------------------------------------------------------------------------------
+
+- name: Managing local directory for environment dump files
+  file:
+    path: "{{ item }}"
+    state: directory
+    mode: 0755
+  with_items:
+    - "{{ playbook_dir }}/spool"
+    - "{{ playbook_dir }}/spool/{{ role_name }}"
+  delegate_to: localhost
+  run_once: true
+
+- name: Generating environment variable dump
+  template:
+    src: "{{ item }}"
+    dest: "{{ playbook_dir }}/spool/{{ role_name }}/envdump.txt"
+    mode: 0644
+  with_first_found:
+    - "inventory/group_files/servers/honzamach.util_inspector/envdump.txt.j2"
+    - "{{ role_path }}/templates/envdump.txt.j2"
+  delegate_to: localhost
+  run_once: true
+
+- name: Generating host environment variable dump
+  template:
+    src: "{{ item }}"
+    dest: "{{ playbook_dir }}/spool/{{ role_name }}/envdump_{{ inventory_hostname }}.txt"
+    mode: 0644
+  with_first_found:
+    - "inventory/host_files/{{ inventory_hostname }}/honzamach.util_inspector/envdump_detail.txt.j2"
+    - "inventory/group_files/servers_{{ msms_server_type }}/honzamach.util_inspector/envdump_detail.txt.j2"
+    - "inventory/group_files/servers/honzamach.util_inspector/envdump_detail.txt.j2"
+    - "{{ role_path }}/templates/envdump_detail.txt.j2"
+  delegate_to: localhost
 

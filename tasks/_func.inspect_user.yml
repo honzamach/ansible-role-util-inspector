@@ -1,5 +1,6 @@
---- 
-- name: Generating user detail documentation pages
+---
+
+- name: "User '{{ ivar_userid }}': Generating user detail documentation page"
   template:
     src: "{{ item }}"
     dest: "{{ playbook_dir }}/{{ hm_util_inspector__docs_dir }}/users/detail_{{ ivar_userid }}.rst"
@@ -7,5 +8,5 @@
   with_first_found:
     - "inventory/group_files/servers/users_detail.rst.j2"
     - "{{ role_path }}/templates/users_detail.rst.j2"
-  run_once: true
   delegate_to: localhost
+  run_once: true
