@@ -1,0 +1,140 @@
+.. _section-inventory-servers-detail-{{ inventory_hostname }}:
+
+Server **{{ ansible_hostname }}**
+===========================================================================================
+
+{% if hm_util_inspector__url_remote_console is defined %}
+* **Remote console**: `console <{{ hm_util_inspector__url_remote_console }}>`__
+{% endif %}
+{% if hm_util_inspector__url_monitoring is defined  %}
+* **Monitoring page**: `status <{{ hm_util_inspector__url_monitoring }}>`__
+{% endif %}
+{% if hm_util_inspector__url_documentation is defined  %}
+* **Documentation page**: `documentation <{{ hm_util_inspector__url_documentation }}>`__
+{% endif %}
+{% if hmui__inc_description.matched %}
+
+.. _section-inventory-servers-detail-{{ inventory_hostname }}-description:
+
+Description
+-------------------------------------------------------------------------------------------
+
+.. include:: /inventory/host_files/{{ inventory_hostname}}/honzamach.util_inspector/_inc_description.rst
+
+{% endif %}
+
+.. _section-inventory-servers-detail-{{ inventory_hostname }}-overview:
+
+Overview
+-------------------------------------------------------------------------------------------
+
+================  ===================================================================================
+**Hostname**      {{ ansible_fqdn }}
+**Distribution**  {{ ansible_lsb.id }} {{ ansible_lsb.release }} {{ ansible_lsb.codename }}
+**Architecture**  {{ ansible_userspace_architecture }}
+**Kernel**        {{ ansible_kernel }}
+**Type**          {{ ansible_product_name }}
+**Serial**        {% if hm_util_inspector__url_support is defined %}`{{ ansible_product_serial }} <hm_util_inspector__url_support>`__{% else %}{{ ansible_product_serial }}{% endif %}
+
+**RAM**           {{ (ansible_memtotal_mb/1024) | round(1, 'ceil') | int }} GB
+**vCPUs**         {{ ansible_processor_vcpus }} x {{ ansible_processor[2] }} ({{ ansible_processor_count }} x {{ ansible_processor_cores }} cores x {{ ansible_processor_threads_per_core }} threads)
+**HDD**           {{ ansible_mounts | map(attribute='size_total') | map('int') | sum(start=0) | human_readable }}
+**Default IPv4**  {{ ansible_default_ipv4.address }}
+**Default IPv6**  {{ ansible_default_ipv6.address }}
+{% if hm_util_inspector__asset_tag is defined %}
+**Asset tag**     {% if hm_util_inspector__url_inventory is defined %}`{{ hm_util_inspector__asset_tag }} <{{ hm_util_inspector__url_inventory }}>`__{% else %}{{ hm_util_inspector__asset_tag }}{% endif %}
+{% endif %}
+
+{% if hm_util_inspector__rackspace_allocation is defined %}
+**Rackspace**     {% if hm_util_inspector__url_rackspace is defined %}`{{ hm_util_inspector__rackspace_allocation }} <{{hm_util_inspector__url_rackspace}}>`__{% else %}{{ hm_util_inspector__rackspace_allocation }}{% endif %}
+{% endif %}
+
+================  ===================================================================================
+
+
+.. _section-inventory-servers-detail-{{ inventory_hostname }}-groups:
+
+Group memberships
+-------------------------------------------------------------------------------------------
+
+Note: Some groups are directly mapped to certain roles.
+
+{% for gname in group_names %}
+  * {% if gname in hm_util_inspector__groups_to_roles %}:ref:`{{ gname }} <section-role-{{ hm_util_inspector__groups_to_roles[gname] }}>`{% else %}{{ gname }}{% endif %}
+
+{% endfor %}
+
+
+.. _section-inventory-servers-detail-{{ inventory_hostname }}-users:
+
+Users
+-------------------------------------------------------------------------------------------
+
+{% if 'hm_accounts__admins' in vars and hm_accounts__admins %}
+
+* **Administrator accounts**:
+
+{% for aname in hm_accounts__admins %}
+  * :ref:`{{ aname }} <section-inventory-users-detail-{{ aname }}>`{% if aname == primary_admin %} **(PRIMARY ADMIN)**{% endif %}
+
+{% endfor %}
+{% endif %}
+
+{% if 'hm_accounts__users' in vars and hm_accounts__users %}
+* **Regular user accounts**:
+
+{% for uname in hm_accounts__users %}
+  * {% if uname in site_users %}:ref:`{{ uname }} <section-inventory-users-detail-{{ uname }}>`{% else %}{{ uname }}{% endif %}
+
+{% endfor %}
+{% endif %}
+
+
+.. _section-inventory-servers-detail-{{ inventory_hostname }}-storage:
+
+Storage
+-------------------------------------------------------------------------------------------
+
+Mounts
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. list-table::
+   :class: server-storage
+   :header-rows: 1
+
+   * - Mount
+     - Device
+     - FS Type
+     - Size
+{% for iter_mount in ansible_mounts | sort(attribute='mount') %}
+
+   * - {{ iter_mount.mount }}
+     - {{ iter_mount.device }}
+     - {{ iter_mount.fstype }}
+     - {{ iter_mount.size_total | human_readable }}
+{% endfor %}
+
+
+Devices
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. list-table::
+   :class: server-devices
+   :header-rows: 1
+
+   * - Device
+     - Model
+     - Vendor
+     - Size
+     - Partitions
+{% set piper = joiner(" | ") %}
+{% for iter_device in ansible_devices | dict2items | sort(attribute='key') %}
+{% if iter_device.value.host and iter_device.value.model and iter_device.value.vendor and iter_device.value.partitions %}
+
+   * - {{ iter_device.key }}
+     - {{ iter_device.value.model }}
+     - {{ iter_device.value.vendor }}
+     - {{ iter_device.value.size }}
+     - {% for iter_partition in iter_device.value.partitions | dict2items | sort(attribute='key') %}{{ piper() }}{{ iter_partition.key }} ({{ iter_partition.value.size }}){% endfor %}
+{% endif%}
+{% endfor %}

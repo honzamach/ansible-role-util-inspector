@@ -1,4 +1,4 @@
-.. _section-users-detail-{{ ivar_userid }}:
+.. _section-inventory-users-detail-{{ ivar_userid }}:
 
 User '{{ ivar_userid }}' ({{ ivar_userdata.name }})
 ================================================================================
@@ -20,7 +20,7 @@ User '{{ ivar_userid }}' ({{ ivar_userdata.name }})
 {% if ns.hosts_admin > 0 %}
 {% for hostid, hostdata in hostvars | dictsort %}
 {% if 'hm_accounts__admins' in hostdata and ivar_userid in hostdata.hm_accounts__admins %}
-* :ref:`section-inventory-detail-{{ hostid }}`{% if 'primary_admin' in hostdata and ivar_userid == hostdata.primary_admin %} **(PRIMARY)**{% endif %}
+* :ref:`section-inventory-servers-detail-{{ hostid }}`{% if 'primary_admin' in hostdata and ivar_userid == hostdata.primary_admin %} **(PRIMARY)**{% endif %}
 
 {% endif %}
 {% endfor %}
@@ -33,7 +33,7 @@ User '{{ ivar_userid }}' ({{ ivar_userdata.name }})
 {% if ns.hosts_user > 0 %}
 {% for hostid, hostdata in hostvars | dictsort %}
 {% if 'hm_accounts__users' in hostdata and ivar_userid in hostdata.hm_accounts__users %}
-* :ref:`section-inventory-detail-{{ hostid }}`
+* :ref:`section-inventory-servers-detail-{{ hostid }}`
 
 {% endif %}
 {% endfor %}

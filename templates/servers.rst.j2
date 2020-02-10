@@ -1,10 +1,10 @@
-.. _section-inventory:
+.. _section-inventory-servers:
 
-Inventory
+Servers
 ================================================================================
 
 
-.. _section-inventory-overview:
+.. _section-inventory-servers-overview:
 
 Overview
 --------------------------------------------------------------------------------
@@ -21,7 +21,7 @@ Overview
      - Monitoring
 {% for iter_inventory_name in hostvars | sort %}
 
-   * - :ref:`{{ iter_inventory_name }} <section-inventory-detail-{{ iter_inventory_name }}>`
+   * - :ref:`{{ iter_inventory_name }} <section-inventory-servers-detail-{{ iter_inventory_name }}>`
      - {{ hostvars[iter_inventory_name].msms_server_type }}
 {% if 'ansible_product_serial' in hostvars[iter_inventory_name] %}
 {% if 'ansible_product_name' not in hostvars[iter_inventory_name] or 'VMware' not in hostvars[iter_inventory_name].ansible_product_name %}
@@ -62,9 +62,9 @@ Overview
 {% endfor %}
 
 
-.. _section-inventory-comparison:
+.. _section-inventory-servers-comparison:
 
-Performance comparison
+Comparison
 --------------------------------------------------------------------------------
 
 .. list-table::
@@ -77,12 +77,13 @@ Performance comparison
      - Arch
      - Kernel
      - RAM
+     - HDD
      - vCPUs
      - Default IPv4
      - Default IPv6
 {% for iter_inventory_name in hostvars | sort %}
 
-   * - :ref:`{{ iter_inventory_name }} <section-inventory-detail-{{ iter_inventory_name }}>`
+   * - :ref:`{{ iter_inventory_name }} <section-inventory-servers-detail-{{ iter_inventory_name }}>`
 {% if 'ansible_product_name' in hostvars[iter_inventory_name] %}
      - {{ hostvars[iter_inventory_name].ansible_product_name }}
 {% else %}
@@ -93,14 +94,28 @@ Performance comparison
 {% else %}
      - -unknown-
 {% endif %}
-{% for subkey in ('ansible_userspace_architecture', 'ansible_kernel', 'ansible_memtotal_mb') %}
+{% for subkey in ('ansible_userspace_architecture', 'ansible_kernel') %}
 {% if subkey in hostvars[iter_inventory_name] %}
      - {{ hostvars[iter_inventory_name][subkey] }}
 {% else %}
      - -unknown-
 {% endif %}
 {% endfor %}
+{% if 'ansible_memtotal_mb' in hostvars[iter_inventory_name] %}
+     - {{ (hostvars[iter_inventory_name].ansible_memtotal_mb/1024) | round(1, 'ceil') | int }} GB
+{% else %}
+     - -unknown-
+{% endif %}
+{% if 'ansible_mounts' in hostvars[iter_inventory_name] %}
+     - {{ hostvars[iter_inventory_name].ansible_mounts | map(attribute='size_total') | map('int') | sum(start=0) | human_readable }}
+{% else %}
+     - -unknown-
+{% endif %}
+{% if 'ansible_processor_vcpus' in hostvars[iter_inventory_name] %}
      - {{ hostvars[iter_inventory_name].ansible_processor_vcpus }} x {{ hostvars[iter_inventory_name].ansible_processor[2] }}
+{% else %}
+     - -unknown-
+{% endif %}
 {% if 'ansible_default_ipv4' in hostvars[iter_inventory_name] %}
      - {{ hostvars[iter_inventory_name].ansible_default_ipv4.address }}
 {% else %}
@@ -114,13 +129,35 @@ Performance comparison
 {% endfor %}
 
 
-.. _section-inventory-list:
+.. _section-inventory-servers-list:
 
-Server list
+Server lists
 --------------------------------------------------------------------------------
+
+Physical servers
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+{% for iter_inventory_name in hostvars | sort %}
+{% if 'ansible_virtualization_role' in hostvars[iter_inventory_name] and hostvars[iter_inventory_name]['ansible_virtualization_role'] != "guest" %}
+* :ref:`section-inventory-servers-detail-{{ iter_inventory_name }}`
+{% endif %}
+{% endfor %}
+
+Virtual servers
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+{% for iter_inventory_name in hostvars | sort %}
+{% if 'ansible_virtualization_role' in hostvars[iter_inventory_name] and hostvars[iter_inventory_name]['ansible_virtualization_role'] == "guest" %}
+* :ref:`section-inventory-servers-detail-{{ iter_inventory_name }}`
+{% endif %}
+{% endfor %}
+
+All servers
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. toctree::
    :maxdepth: 1
    :glob:
 
-   /inventory/docs/inventory/detail_*
+   /inventory/docs/servers/detail_*
+

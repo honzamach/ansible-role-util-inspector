@@ -17,9 +17,9 @@
     - "{{ playbook_dir }}/{{ hm_util_inspector__docs_dir }}"
     - "{{ playbook_dir }}/{{ hm_util_inspector__docs_dir }}/dokuwiki"
     - "{{ playbook_dir }}/{{ hm_util_inspector__docs_dir }}/envdump"
-    - "{{ playbook_dir }}/{{ hm_util_inspector__docs_dir }}/inventory"
-    - "{{ playbook_dir }}/{{ hm_util_inspector__docs_dir }}/monitoring"
+    - "{{ playbook_dir }}/{{ hm_util_inspector__docs_dir }}/servers"
     - "{{ playbook_dir }}/{{ hm_util_inspector__docs_dir }}/users"
+    - "{{ playbook_dir }}/{{ hm_util_inspector__docs_dir }}/monitoring"
   delegate_to: localhost
   run_once: true
 
@@ -29,8 +29,8 @@
     dest: "{{ playbook_dir }}/{{ hm_util_inspector__docs_dir }}/section_01_inventory.rst"
     mode: 0644
   with_first_found:
-    - "inventory/group_files/servers/honzamach.util_inspector/inventory.rst.j2"
-    - "{{ role_path }}/templates/inventory.rst.j2"
+    - "inventory/group_files/servers/honzamach.util_inspector/section_inventory.rst.j2"
+    - "{{ role_path }}/templates/section_inventory.rst.j2"
   delegate_to: localhost
   run_once: true
   notify:
@@ -47,16 +47,29 @@
   delegate_to: localhost
   run_once: true
 
-- name: Generating inventory detail documentation page
+- name: Generating server overview documentation page
   template:
     src: "{{ item }}"
-    dest: "{{ playbook_dir }}/{{ hm_util_inspector__docs_dir }}/inventory/detail_{{ inventory_hostname }}.rst"
+    dest: "{{ playbook_dir }}/{{ hm_util_inspector__docs_dir }}/inventory_01_servers.rst"
     mode: 0644
   with_first_found:
-    - "inventory/host_files/{{ inventory_hostname }}/honzamach.util_inspector/inventory_detail.rst.j2"
-    - "inventory/group_files/servers_{{ msms_server_type }}/honzamach.util_inspector/inventory_detail.rst.j2"
-    - "inventory/group_files/servers/honzamach.util_inspector/inventory_detail.rst.j2"
-    - "{{ role_path }}/templates/inventory_detail.rst.j2"
+    - "inventory/group_files/servers/honzamach.util_inspector/servers.rst.j2"
+    - "{{ role_path }}/templates/servers.rst.j2"
+  delegate_to: localhost
+  run_once: true
+  notify:
+    - Rebuild documentation
+
+- name: Generating server detail documentation page
+  template:
+    src: "{{ item }}"
+    dest: "{{ playbook_dir }}/{{ hm_util_inspector__docs_dir }}/servers/detail_{{ inventory_hostname }}.rst"
+    mode: 0644
+  with_first_found:
+    - "inventory/host_files/{{ inventory_hostname }}/honzamach.util_inspector/servers_detail.rst.j2"
+    - "inventory/group_files/servers_{{ msms_server_type }}/honzamach.util_inspector/servers_detail.rst.j2"
+    - "inventory/group_files/servers/honzamach.util_inspector/servers_detail.rst.j2"
+    - "{{ role_path }}/templates/servers_detail.rst.j2"
   delegate_to: localhost
   notify:
     - Rebuild documentation
@@ -66,13 +79,15 @@
 - name: Generating user overview documentation page
   template:
     src: "{{ item }}"
-    dest: "{{ playbook_dir }}/{{ hm_util_inspector__docs_dir }}/section_02_users.rst"
+    dest: "{{ playbook_dir }}/{{ hm_util_inspector__docs_dir }}/inventory_02_users.rst"
     mode: 0644
   with_first_found:
     - "inventory/group_files/servers/honzamach.util_inspector/users.rst.j2"
     - "{{ role_path }}/templates/users.rst.j2"
   delegate_to: localhost
   run_once: true
+  notify:
+    - Rebuild documentation
 
 - include_tasks: _func.inspect_user.yml
   vars:
@@ -106,13 +121,15 @@
     - name: Generating monitoring overview documentation page
       template:
         src: "{{ item }}"
-        dest: "{{ playbook_dir }}/{{ hm_util_inspector__docs_dir }}/section_03_monitoring.rst"
+        dest: "{{ playbook_dir }}/{{ hm_util_inspector__docs_dir }}/inventory_03_monitoring.rst"
         mode: 0644
       with_first_found:
         - "inventory/group_files/servers/honzamach.util_inspector/monitoring.rst.j2"
         - "{{ role_path }}/templates/monitoring.rst.j2"
       delegate_to: localhost
       run_once: true
+      notify:
+        - Rebuild documentation
 
     - name: Generating monitoring detail documentation pages
       template:
@@ -125,6 +142,8 @@
         - "group_files/servers/honzamach.util_inspector/monitoring_detail.rst.j2"
         - "{{ role_path }}/templates/monitoring_detail.rst.j2"
       delegate_to: localhost
+      notify:
+        - Rebuild documentation
 
   when: '"servers_monitored" in group_names'
 

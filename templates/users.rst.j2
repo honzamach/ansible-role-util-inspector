@@ -4,12 +4,12 @@ Users
 ================================================================================
 
 
-.. _section-users-overview:
+.. _section-inventory-users-overview:
 
 Overview
 --------------------------------------------------------------------------------
 
-Following table contains list of all user accounts currently defined in 
+Following table contains list of all user accounts currently defined in
 :envvar:`site_users` configuration directive:
 
 .. list-table::
@@ -39,7 +39,7 @@ Following table contains list of all user accounts currently defined in
     {% endif %}
 {% endfor %}
 
-   * - :ref:`{{ userid }} <section-users-detail-{{ userid }}>`{% if ns.hosts_padmin > 0 %} **(PRIMARY)**{% endif %}
+   * - :ref:`{{ userid }} <section-inventory-users-detail-{{ userid }}>`{% if ns.hosts_padmin > 0 %} **(PRIMARY)**{% endif %}
 
      - {{ userdata.name }}
      - {{ ns.hosts_admin }}
@@ -48,7 +48,7 @@ Following table contains list of all user accounts currently defined in
 {% endfor %}
 
 
-.. _section-users-list:
+.. _section-inventory-users-list:
 
 User list
 --------------------------------------------------------------------------------

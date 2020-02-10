@@ -20,6 +20,16 @@ Currently following documentation sections are generated:
 * **Users** - Overview of all your users with links to user detail pages.
 * ** Monitoring** - Overview of monitoring setup of your servers.
 
+**Table of Contents:**
+
+* :ref:`section-role-timesynced-installation`
+* :ref:`section-role-timesynced-usage`
+* :ref:`section-role-timesynced-variables`
+* :ref:`section-role-timesynced-author`
+
+This role is part of the `MSMS <https://github.com/honzamach/msms>`__ package.
+Some common features are documented in its :ref:`manual <section-manual>`.
+
 
 .. _section-role-util-inspector-installation:
 
@@ -67,10 +77,19 @@ Internal role variables
 
 .. envvar:: hm_util_inspector__docs_dir
 
-	  Name of the directory to which to generate the documentation.
+	Name of the directory to which to generate the documentation.
 
     * *Datatype:* ``string``
     * *Default:* ``"inventory/docs"``
+
+.. envvar:: hm_util_inspector__groups_to_roles
+
+	Mapping of group names to roles. This feature is used when generating server
+	inventory detail page to provide links directly to roles, that are being applied
+	to particular server.
+
+	* *Datatype:* ``dictionary``
+    * *Default:* (please see file ``defaults/main.yml`` for details)
 
 
 .. _section-role-util-inspector-author:

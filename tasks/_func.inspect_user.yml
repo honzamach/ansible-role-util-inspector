@@ -10,3 +10,5 @@
     - "{{ role_path }}/templates/users_detail.rst.j2"
   delegate_to: localhost
   run_once: true
+  notify:
+    - Rebuild documentation

@@ -1,3 +1,25 @@
 ---
 
 hm_util_inspector__docs_dir: inventory/docs
+
+hm_util_inspector__groups_to_roles:
+  servers_cleanup: cleanup
+  servers_commonenv: commonenv
+  servers_accounts: accounts
+  servers_timesynced: timesynced
+  servers_certified: certified
+  servers_backupped: backupped
+  servers_logged: logged
+  servers_monitored: monitored
+  servers_firewalled: firewalled
+  servers_shibboleth: shibboleth
+  servers_postgresql: postgresql
+  servers_geoip: geoip
+  servers_alchemist: alchemist
+  servers_griffin: griffin
+  servers_griffin_watchee: griffin-watchee
+  servers_logserver: logserver
+  servers_puppeteer: pupeteer
+  servers_mentat: mentat
+  servers_mentat_dev: mentat-dev
+  servers_warden_client: warden-client
