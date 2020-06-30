@@ -15,6 +15,8 @@ Overview
 
    * - Host
      - Category
+     - Purchased
+     - Insured
      - Serial
      - Tag
      - Location
@@ -22,7 +24,17 @@ Overview
 {% for iter_inventory_name in hostvars | sort %}
 
    * - :ref:`{{ iter_inventory_name }} <section-inventory-servers-detail-{{ iter_inventory_name }}>`
-     - {{ hostvars[iter_inventory_name].msms_server_type }}
+     - {{ hostvars[iter_inventory_name].msms_server_type | enclose_with_if(hostvars[iter_inventory_name].msms_server_type == 'production', '**')}}
+{% if 'hm_util_inspector__date_purchased' in hostvars[iter_inventory_name] %}
+     - {{ hostvars[iter_inventory_name].hm_util_inspector__date_purchased }}
+{% else %}
+     - ---
+{% endif %}
+{% if 'hm_util_inspector__date_insured' in hostvars[iter_inventory_name] %}
+     - {{ hostvars[iter_inventory_name].hm_util_inspector__date_insured | date_in_past | print_if('**') }}{{ hostvars[iter_inventory_name].hm_util_inspector__date_insured }}{{ hostvars[iter_inventory_name].hm_util_inspector__date_insured | date_in_past | print_if('**') }} ({{ hostvars[iter_inventory_name].hm_util_inspector__date_insured | delta_days }}d)
+{% else %}
+     - ---
+{% endif %}
 {% if 'ansible_product_serial' in hostvars[iter_inventory_name] %}
 {% if 'ansible_product_name' not in hostvars[iter_inventory_name] or 'VMware' not in hostvars[iter_inventory_name].ansible_product_name %}
 {% if 'hm_util_inspector__url_support' in hostvars[iter_inventory_name] %}
@@ -64,7 +76,7 @@ Overview
 
 .. _section-inventory-servers-comparison:
 
-Comparison
+Performance comparison
 --------------------------------------------------------------------------------
 
 .. list-table::
@@ -148,6 +160,15 @@ Virtual servers
 
 {% for iter_inventory_name in hostvars | sort %}
 {% if 'ansible_virtualization_role' in hostvars[iter_inventory_name] and hostvars[iter_inventory_name]['ansible_virtualization_role'] == "guest" %}
+* :ref:`section-inventory-servers-detail-{{ iter_inventory_name }}`
+{% endif %}
+{% endfor %}
+
+Production servers
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+{% for iter_inventory_name in hostvars | sort %}
+{% if 'msms_server_type' in hostvars[iter_inventory_name] and hostvars[iter_inventory_name]['msms_server_type'] == "production" %}
 * :ref:`section-inventory-servers-detail-{{ iter_inventory_name }}`
 {% endif %}
 {% endfor %}

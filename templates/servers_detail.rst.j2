@@ -28,28 +28,36 @@ Description
 Overview
 -------------------------------------------------------------------------------------------
 
-================  ===================================================================================
-**Hostname**      {{ ansible_fqdn }}
-**Distribution**  {{ ansible_lsb.id }} {{ ansible_lsb.release }} {{ ansible_lsb.codename }}
-**Architecture**  {{ ansible_userspace_architecture }}
-**Kernel**        {{ ansible_kernel }}
-**Type**          {{ ansible_product_name }}
-**Serial**        {% if hm_util_inspector__url_support is defined %}`{{ ansible_product_serial }} <hm_util_inspector__url_support>`__{% else %}{{ ansible_product_serial }}{% endif %}
+=================  ==============================================================================================================
+**Hostname**       {{ ansible_fqdn }}
+**Distribution**   {{ ansible_lsb.id }} {{ ansible_lsb.release }} {{ ansible_lsb.codename }}
+**Architecture**   {{ ansible_userspace_architecture }}
+**Kernel**         {{ ansible_kernel }}
+**Type**           {{ ansible_product_name }}
+**Serial**         {% if hm_util_inspector__url_support is defined %}`{{ ansible_product_serial }} <hm_util_inspector__url_support>`__{% else %}{{ ansible_product_serial }}{% endif %}
 
-**RAM**           {{ (ansible_memtotal_mb/1024) | round(1, 'ceil') | int }} GB
-**vCPUs**         {{ ansible_processor_vcpus }} x {{ ansible_processor[2] }} ({{ ansible_processor_count }} x {{ ansible_processor_cores }} cores x {{ ansible_processor_threads_per_core }} threads)
-**HDD**           {{ ansible_mounts | map(attribute='size_total') | map('int') | sum(start=0) | human_readable }}
-**Default IPv4**  {{ ansible_default_ipv4.address }}
-**Default IPv6**  {{ ansible_default_ipv6.address }}
+**RAM**            {{ (ansible_memtotal_mb/1024) | round(1, 'ceil') | int }} GB
+**vCPUs**          {{ ansible_processor_vcpus }} x {{ ansible_processor[2] }} ({{ ansible_processor_count }} x {{ ansible_processor_cores }} cores x {{ ansible_processor_threads_per_core }} threads)
+**HDD**            {{ ansible_mounts | map(attribute='size_total') | map('int') | sum(start=0) | human_readable }}
+**Default IPv4**   {{ ansible_default_ipv4.address }}
+**Default IPv6**   {{ ansible_default_ipv6.address }}
 {% if hm_util_inspector__asset_tag is defined %}
-**Asset tag**     {% if hm_util_inspector__url_inventory is defined %}`{{ hm_util_inspector__asset_tag }} <{{ hm_util_inspector__url_inventory }}>`__{% else %}{{ hm_util_inspector__asset_tag }}{% endif %}
+**Asset tag**      {% if hm_util_inspector__url_inventory is defined %}`{{ hm_util_inspector__asset_tag }} <{{ hm_util_inspector__url_inventory }}>`__{% else %}{{ hm_util_inspector__asset_tag }}{% endif %}
+{% endif %}
+
+{% if hm_util_inspector__date_purchased is defined %}
+**Purchase date**  {{ hm_util_inspector__date_purchased }}
+{% endif %}
+
+{% if hm_util_inspector__date_insured is defined and hm_util_inspector__date_insured %}
+**Insured until**  {{ hm_util_inspector__date_insured }} ({{ hm_util_inspector__date_insured | delta_days_abs }}{% if hm_util_inspector__date_insured | date_in_future %} days remaining{% else %} days expired{% endif %})
 {% endif %}
 
 {% if hm_util_inspector__rackspace_allocation is defined %}
-**Rackspace**     {% if hm_util_inspector__url_rackspace is defined %}`{{ hm_util_inspector__rackspace_allocation }} <{{hm_util_inspector__url_rackspace}}>`__{% else %}{{ hm_util_inspector__rackspace_allocation }}{% endif %}
+**Rackspace**      {% if hm_util_inspector__url_rackspace is defined %}`{{ hm_util_inspector__rackspace_allocation }} <{{hm_util_inspector__url_rackspace}}>`__{% else %}{{ hm_util_inspector__rackspace_allocation }}{% endif %}
 {% endif %}
 
-================  ===================================================================================
+=================  ==============================================================================================================
 
 
 .. _section-inventory-servers-detail-{{ inventory_hostname }}-groups:
