@@ -31,7 +31,7 @@ Overview
      - ---
 {% endif %}
 {% if 'hm_util_inspector__date_insured' in hostvars[iter_inventory_name] %}
-     - {{ hostvars[iter_inventory_name].hm_util_inspector__date_insured | date_in_past | print_if('**') }}{{ hostvars[iter_inventory_name].hm_util_inspector__date_insured }}{{ hostvars[iter_inventory_name].hm_util_inspector__date_insured | date_in_past | print_if('**') }} ({{ hostvars[iter_inventory_name].hm_util_inspector__date_insured | delta_days }}d)
+     - {{ hostvars[iter_inventory_name].hm_util_inspector__date_insured | date_in_past | print_if('**') }}{{ hostvars[iter_inventory_name].hm_util_inspector__date_insured }}{{ hostvars[iter_inventory_name].hm_util_inspector__date_insured | date_in_past | print_if('**') }}
 {% else %}
      - ---
 {% endif %}
