@@ -19,7 +19,7 @@ hm_util_inspector__groups_to_roles:
   servers_griffin: griffin
   servers_griffin_watchee: griffin-watchee
   servers_logserver: logserver
-  servers_puppeteer: pupeteer
+  servers_puppeteer: puppeteer
   servers_mentat: mentat
   servers_mentat_dev: mentat-dev
   servers_warden_client: warden-client
