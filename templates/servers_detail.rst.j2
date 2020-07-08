@@ -50,7 +50,7 @@ Overview
 {% endif %}
 
 {% if hm_util_inspector__date_insured is defined and hm_util_inspector__date_insured %}
-**Insured until**  {{ hm_util_inspector__date_insured }} ({{ hm_util_inspector__date_insured | delta_days_abs }}{% if hm_util_inspector__date_insured | date_in_future %} days remaining{% else %} days expired{% endif %})
+**Insured until**  {{ hm_util_inspector__date_insured | date_in_past | print_if('**') }}{{ hm_util_inspector__date_insured }}{{ hm_util_inspector__date_insured | date_in_past | print_if('**') }}
 {% endif %}
 
 {% if hm_util_inspector__rackspace_allocation is defined %}
@@ -91,7 +91,7 @@ Users
 {% if 'hm_accounts__users' in vars and hm_accounts__users %}
 * **Regular user accounts**:
 
-{% for uname in hm_accounts__users %}
+{% for uname, udata in hm_accounts__users | dictsort %}
   * {% if uname in site_users %}:ref:`{{ uname }} <section-inventory-users-detail-{{ uname }}>`{% else %}{{ uname }}{% endif %}
 
 {% endfor %}
