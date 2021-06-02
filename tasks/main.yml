@@ -106,6 +106,7 @@
       shell: "grep -v \"^\\s*#\" /etc/nagios/nrpe.cfg /etc/nagios/nrpe_local.cfg /etc/nagios/nrpe.d/*.cfg | grep \"command\\[\" | sed 's/.*:command\\[//' | sed 's/\\]=.*//'"
       register: current_nrpe_commands
       changed_when: False
+      check_mode: No
 
     - debug: var=current_nrpe_commands
       tags:
